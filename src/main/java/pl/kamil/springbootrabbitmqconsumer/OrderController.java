@@ -1,14 +1,16 @@
 package pl.kamil.springbootrabbitmqconsumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import pl.kamil.model.Order;
 
 @RestController
 public class OrderController {
 
-    RabbitMQConsumer rabbitMQConsumer;
+    private final RabbitMQConsumer rabbitMQConsumer;
 
     @Autowired
     OrderController(RabbitMQConsumer rabbitMQConsumer) {
@@ -16,7 +18,7 @@ public class OrderController {
     }
 
     @GetMapping("receiveOrder")
-    public String getOrderFromQueue(){
-        return rabbitMQConsumer.getSingleMessageFormTheQueue();
+    public ResponseEntity<Order> getOrderFromQueue(){
+        return new ResponseEntity<>(rabbitMQConsumer.getSingleMessageFormTheQueue(), HttpStatus.OK);
     }
 }
